@@ -1,0 +1,10 @@
+#
+# I2C pointer
+#
+
+config I2C_POINTER
+	tristate "Enable Pointer Acc"
+	default m
+	help
+	  Say Y here if you intend to run pointer acc.If you don't know, say N.
+
