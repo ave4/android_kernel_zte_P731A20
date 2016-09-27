@@ -25,25 +25,6 @@ MALI_ENABLE_CPU_CYCLES ?= 0
 MALI_ENABLE_GPU_CONTROL_IN_PARAM ?= 1
 MALI_GPU_BASE_FREQ ?= 256
 
-# For customer releases the Linux Device Drivers will be provided as ARM proprietary and GPL releases:
-# The ARM proprietary product will only include the license/proprietary directory
-# The GPL product will only include the license/gpl directory
-ifeq ($(wildcard $(src)/linux/license/gpl/*),)
-    ccflags-y += -I$(src)/linux/license/proprietary
-    ifeq ($(CONFIG_MALI400_PROFILING),y)
-        $(error Profiling is incompatible with non-GPL license)
-    endif
-    ifeq ($(CONFIG_PM_RUNTIME),y)
-        $(error Runtime PM is incompatible with non-GPL license)
-    endif
-    ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
-        $(error DMA-BUF is incompatible with non-GPL license)
-    endif
-    $(error Linux Device integration is incompatible with non-GPL license)
-else
-    ccflags-y += -I$(src)/linux/license/gpl
-endif
-
 ifeq ($(CONFIG_MALI400),y)
     MALI_ENABLE_GPU_CONTROL_IN_PARAM = 0
 else
@@ -207,7 +188,7 @@ ccflags-$(CONFIG_MALI400_UMP) += -I$(src)/../ump/include/ump
 ccflags-$(CONFIG_MALI400_DEBUG) += -DDEBUG
 
 # Use our defines when compiling
-ccflags-y += -I$(src) -I$(src)/include -I$(src)/common -I$(src)/linux -I$(src)/platform
+ccflags-y += -I$(src) -I$(src)/include -I$(src)/common -I$(src)/linux -I$(src)/linux/license/gpl -I$(src)/platform
 
 export MALI_PLATFORM_FILES = $(wildcard platform/$(MALI_PLATFORM)/*.c)
 
